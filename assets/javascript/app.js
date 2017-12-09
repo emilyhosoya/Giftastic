@@ -37,7 +37,7 @@ function displayGifs() {
   console.log("Search query:", topicQuery);
 
   let APIkey = "NFW4pj2TL5I4F9PKHBpx4bG1qYz0G92d";
-  let queryURL = `http://api.giphy.com/v1/gifs/search?api_key=${APIkey}&q=${
+  let queryURL = `https://api.giphy.com/v1/gifs/search?api_key=${APIkey}&q=${
     topicQuery
   }`;
 
