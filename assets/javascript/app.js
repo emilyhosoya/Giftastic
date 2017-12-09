@@ -57,51 +57,36 @@ function displayGifs() {
 
     for (let i = 0; i < 10; i++) {
       currentGifs.push({
+        id: "gif-" + [i],
+        isStatic: true,
         staticImg: topGifs[i].images.fixed_width_still.url,
         animatedImg: topGifs[i].images.fixed_width.url,
-        rating: topGifs[i].rating
+        rating: topGifs[i].rating,
+        currentSrc: function() {
+          if (this.isStatic) {
+            return this.staticImg;
+          } else {
+            return this.animatedImg;
+          }
+        }
       });
 
       $("#gifs").append(`
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-      <img class="gifs" src="${currentGifs[i].staticImg}"><br>
+      <img 
+        class="gifs" 
+        id="${currentGifs[i].id}" 
+        data-isStatic="${currentGifs[i].isStatic}"
+        data-staticSrc="${currentGifs[i].staticImg}"
+        data-animatedSrc="${currentGifs[i].animatedImg}"
+        src="${currentGifs[i].currentSrc()}"
+        /><br>
       <span>Rating: ${currentGifs[i].rating}</span>
       </div>
         `);
     }
 
     console.log("Top 10 gifs", currentGifs);
-
-    // turn gifs from static to animated
-    $("img").click(function() {
-      let clicked = $("img").index(this);
-      let src = this.currentSrc;
-      console.log(`Clicked the image at index ${clicked}: ${src}`);
-
-      // grep, filter, contains?
-
-      // why is this true?
-      if (!$.contains(document.body, src)) {
-        console.log("The image is static. Animating it...");
-        // src.toString().replace("_s.gif", ".gif");
-        // console.log(src);
-      } else {
-        console.log("The image is animated. Turning it static...");
-      }
-
-      //   currentGifs.filter(function(obj) {
-      //     return obj.staticImg == this.currentSrc;
-      //   });
-
-      //   $.grep(currentGifs, function(this) {
-      //     if (currentGifs.find(this.currentSrc) === currentGifs.staticImg) {
-      //         console.log("The image is static. Changing it to a gif...");
-      //         // clicked.attr("src", currentGifs.indexOf(curr));
-      //       } else {
-      //         console.log("The image is a gif. Turning it static...");
-      //       }
-      //   });
-    });
   });
 }
 
@@ -120,6 +105,25 @@ $("#add-topic").on("click", event => {
 
 // on 'Submit', new topic is added
 $(document).on("click", ".topic", displayGifs);
+
+// changing gifs from static to animated and vice versa
+$(document).on("click", ".gifs", function() {
+  let clicked = $(this).attr("id");
+  // this is not accessing the currentGifs array:
+  let isStatic = $(this).attr("data-isStatic");
+  let src = $(this).attr("src");
+  console.log(`Clicked ${clicked} (is static: ${isStatic}): ${src}`);
+
+  if (isStatic === "true") {
+    console.log("The image is static. Animating it...");
+    $(this).attr("src", $(this).attr("data-animatedSrc"));
+    $(this).attr("data-isStatic", false);
+  } else if (isStatic === "false") {
+    console.log("The image is animated. Turning it static...");
+    $(this).attr("src", $(this).attr("data-staticSrc"));
+    $(this).attr("data-isStatic", true);
+  }
+});
 
 // initial page load function
 $(document).ready(function() {
