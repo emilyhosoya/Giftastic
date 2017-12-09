@@ -1,0 +1,16 @@
+.btn.topic {
+  margin: 3px;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+input {
+  width: 100% !important;
+}
+
+/* .card {
+  display: inline-block;
+  border: none;
+} */
